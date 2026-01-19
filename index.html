@@ -152,8 +152,9 @@
         
         #msg-box {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: rgba(30, 30, 30, 0.98); color: white; padding: 25px; border-radius: 12px; 
+            background: rgba(30, 30, 30, 0.98); color: white; padding: 15px; border-radius: 12px; 
             text-align: center; display: none; z-index: 3000; width: 85%; max-width: 320px; border: 2px solid #ffca28;
+            max-height: 90vh; overflow-y: auto; 
         }
         .hint-card { outline: 3px solid #ffca28; z-index: 500 !important; transform: scale(1.05); }
 
@@ -208,6 +209,9 @@
             .landscape-el { display: block; }
             .card-rank-portrait { display: none; }
             .card { justify-content: center; gap: 0; }
+            
+            /* Compact msg-box for landscape */
+            #msg-box { padding: 12px; width: 70%; max-width: 450px; }
         }
 
         @media (min-width: 1000px) {
@@ -253,9 +257,9 @@
 </div>
 
 <div id="msg-box">
-    <h2 id="msg-title" style="margin-top:0; color: #ffca28;"></h2>
-    <div id="msg-body" style="text-align:left; font-size:0.85rem; line-height:1.4; margin-bottom:20px;"></div>
-    <div id="msg-btns"></div>
+    <h2 id="msg-title" style="margin-top:0; margin-bottom: 8px; color: #ffca28;"></h2>
+    <div id="msg-body" style="text-align:left; font-size:0.85rem; line-height:1.3; margin-bottom:12px;"></div>
+    <div id="msg-btns" style="display:flex; justify-content:center; flex-wrap:wrap; gap:8px;"></div>
 </div>
 
 <script>
@@ -488,19 +492,31 @@
     
     function showMenu() {
         document.getElementById('msg-title').innerText = "TRIPEAKS";
+        
+        // TIGHTER SPACING, CENTERED BUTTON, FULL RULES
         document.getElementById('msg-body').innerHTML = `
-            <div style="text-align:center; font-weight:bold; margin-bottom:12px;">Version 2.0 PWA</div>
-            <strong>How to Play:</strong><br>Tap cards one rank higher or lower than the waste card. Aces play on Kings or 2s.<br><br>
-            <strong>Scoring:</strong><br>
-            • Streak bonus: +50 pts per card<br>
-            • Time bonus: +50 pts/sec (under 1 min)<br>
-            • Completion: 1,000 pts per stock card
+            <div style="text-align:center; font-weight:bold; margin-bottom:4px; font-size:0.9rem;">Version 2.0 PWA</div>
+            
+            <div style="text-align:center; margin-bottom:8px;">
+                <a href="https://www.buymeacoffee.com/classmarks" target="_blank" style="text-decoration:none;">
+                    <button style="font-size:0.8rem; padding:8px 15px; border-radius:20px; border:none; font-weight:bold; cursor:pointer; background:#FFDD00; color:#000000; box-shadow:0 3px #c2a900;">☕ Buy Me A Coffee</button>
+                </a>
+            </div>
+
+            <div style="text-align:left;">
+                <strong>How to Play:</strong> Tap cards one rank higher or lower than the waste card. Aces play on Kings or 2s.<br>
+                <div style="margin-top:6px;"><strong>Scoring:</strong></div>
+                • Streak bonus: +50 pts per card<br>
+                • Time bonus: +50 pts/sec (under 1 min)<br>
+                • Completion: 1,000 pts per stock card
+            </div>
         `;
+        
         const btns = document.getElementById('msg-btns');
         btns.innerHTML = `
-            <button style="padding:10px 20px; border-radius:20px; border:none; font-weight:bold; cursor:pointer; background:#ffca28; color:#333;" onclick="newGame()">NEW GAME</button>
-            <button style="padding:10px 20px; border-radius:20px; border:none; font-weight:bold; cursor:pointer; background:#2196f3; color:white; margin-left:10px;" onclick="showStats()">STATS</button>
-            <button style="padding:10px 20px; border-radius:20px; border:none; font-weight:bold; cursor:pointer; background:#555; color:white; margin-left:10px;" onclick="closeMsg()">CLOSE</button>
+            <button style="padding:10px 18px; border-radius:20px; border:none; font-weight:bold; cursor:pointer; background:#ffca28; color:#333;" onclick="newGame()">NEW GAME</button>
+            <button style="padding:10px 18px; border-radius:20px; border:none; font-weight:bold; cursor:pointer; background:#2196f3; color:white;" onclick="showStats()">STATS</button>
+            <button style="padding:10px 18px; border-radius:20px; border:none; font-weight:bold; cursor:pointer; background:#555; color:white;" onclick="closeMsg()">CLOSE</button>
         `;
         document.getElementById('msg-box').style.display = 'block';
     }

@@ -1,9 +1,8 @@
-const CACHE_NAME = 'tripeaks-v1';
+const CACHE_NAME = 'tripeaks-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
-  // If you add custom images/icons, add them here too:
   // './icon-192.png',
   // './icon-512.png'
 ];
