@@ -1,0 +1,16 @@
+{
+  "name": "TriPeaks Pro",
+  "short_name": "TriPeaks",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#1b5e20",
+  "theme_color": "#1b5e20",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAMAAABlApw1AAAAdVBMVEUAAAAuKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf99wN5uAAAAJnRSTlMAIg0I8gX66xIGC/L05iAf9uPqGgr569y9lnx6bV1MQjUqIh4YF+PZ0m1z1wAAAmRJREFUeNrt3dtywjAMBdC0TdrSAm3v/39LF+iFjD04nU6b+6z2zWhGsiDkYoxxjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcb85/wG4KMF5Wf36/kAAAAASUVORK5CYII=",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

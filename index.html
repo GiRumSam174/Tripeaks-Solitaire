@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>TriPeaks Solitaire Pro</title>
+
+    <link rel="manifest" href="manifest.json">
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1b5e20">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="TriPeaks">
+
+    <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAMAAABlApw1AAAAdVBMVEUAAAAuKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf8uKf99wN5uAAAAJnRSTlMAIg3yBfrrEgYL9PTmIB/24+oaCvb069y9lnx6bV1MQjUqIh4YF+PZ0m1z1wAAAmRJREFUeNrt3dtywjAMBdC0TdrSAm3v/39LF+iFjD04nU6b+6z2zWhGsiDkYoxxjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHG/L8xT0a+3+t2v9/rX+e7k++b1e95v9f5dkL+1/l+Qv7X+W5C/tf5ZkL+1/lWQv7X+UZC/tf5QkL+1/l8Qv7X+WxCfizfSsiP5RsJ+bF8IyE/lm8k5MfyrYT8WL6VkB/LtxLyY/lWQuvL5xNar59PaH31fEJr9fMJrY+fT2h9/HxC6+PnE1ofP5/Q+vj5hNbHzye0Pn4+ofXx8wmtj59PaH38fELr4+cTWh8/n9D6+PmE1sfPJ7Q+fj6h9fHzCa2Pn09offx8Quvj5xNaHz+f0Pr4+YTWx88ntD5+PqH18fMJrY+fT2h9/HxCa/XzCa2vn09off18Quvr5xNaXz+f0Pr6+YTW188ntL5+PqH19fMJra+fT2h9/XxC6+vnE1pfP5/Q+vr5hNbXzye0vn4+ofX18wmtr59PaH39fELr6+cTWl8/n9D6+vmE1tfPJ7S+fj6h9fXzCa2vn09off18Quvr5xNaXz+f0Pr6+YTW188ntL5+PqH19fMJra+fT2h9/XxC6+vnE1pfP5/Q+vr5hNbXzye0vn4+ofX18wmtr59PaH39fELr6+cTWl8/n9D6+vmE1tfPJ7S+fj6h9fXzCa2vn09off18Quvr5xNaXz+f0Pr6+YTW188n5MfyrYT8WL6VkB/LtxLyY/lGQn4s30jIj+UbCfmxfCshP5ZvJeR/nW8l5H+dbyTkf51vJOR/nc8n5H+dzyfkf53PJ+R/nW8m5H+d7yfkf53vJ+R/ne92v9/rX+c7Y4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcb85/wG4KMF5Wf36/kAAAAASUVORK5CYII=">
+
+    <style>
+        :root {
+            --bg-color: #1b5e20; 
+            --card-radius: 6px;
+            --row-offset: 0.65; 
+            --board-max-w: 1000px;
+            
+            /* PORTRAIT BASE SIZES */
+            --card-w: calc(10vw - 2px); 
+            --card-h: 14.28vw; 
+            
+            /* Landscape specific vars */
+            --font-corner: 0.7rem; 
+            --font-suit-landscape: calc(1.5rem - 1px);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: white;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0; padding: 0;
+            height: 100dvh; width: 100vw;
+            overflow: hidden;
+            display: flex; flex-direction: column;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* --- TOP BAR --- */
+        #top-bar {
+            flex: 0 0 50px; background: rgba(0,0,0,0.3);
+            display: flex; justify-content: center; align-items: center;
+            padding: 0 15px; z-index: 1000;
+            padding-top: env(safe-area-inset-top); /* Notch Support */
+        }
+        #top-bar-content { 
+            width: 100%; max-width: var(--board-max-w); 
+            display: grid; align-items: center;
+            grid-template-columns: 1fr auto 1fr;
+        }
+        #game-title {
+            font-weight: 900; letter-spacing: 2px; cursor: pointer; 
+            text-align: center; font-size: 1.1rem; color: #ffca28; white-space: nowrap;
+        }
+        #score { font-weight: bold; color: #ffffff; justify-self: start; }
+        
+        /* Timer replaces version */
+        #timer { opacity: 0.5; font-size: 0.7rem; justify-self: end; font-family: monospace; letter-spacing: 1px; }
+        
+        .top-btn {
+            background: none; border: none; cursor: pointer; color: white; 
+            display: none; flex-direction: column; align-items: center; position: relative;
+        }
+        .top-btn span { font-size: 1.2rem; margin-bottom: 2px; }
+        .top-btn div { font-size: 0.6rem; font-weight: bold; text-transform: uppercase; }
+        .top-hint-wrapper { display: none; position: relative; }
+
+        /* --- GAME BOARD --- */
+        #game-board { flex: 1; position: relative; width: 100%; display: flex; justify-content: center; }
+        #tableau-container { position: relative; width: 100%; max-width: var(--board-max-w); height: 100%; }
+
+        /* --- CARD STYLING --- */
+        .card {
+            width: var(--card-w); height: var(--card-h);
+            background-color: white; border-radius: var(--card-radius);
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            box-sizing: border-box; position: absolute; 
+            cursor: pointer; color: #212121;
+            transition: transform 0.2s, top 0.3s, left 0.3s;
+            overflow: hidden;
+        }
+        .card.red { color: #d32f2f; }
+        .card.black { color: #212121; }
+        .card.back { background: #0d47a1; border: 1px solid white; }
+        .card.locked { filter: brightness(0.85); }
+
+        /* LANDSCAPE CORNERS */
+        .corner { position: absolute; font-size: var(--font-corner); font-weight: bold; }
+        .top-left { top: 4px; left: 4px; }
+        .bottom-right { bottom: 4px; right: 4px; transform: rotate(180deg); }
+
+        /* LANDSCAPE/DEFAULT SUIT SIZE */
+        .card-suit {
+            display: block;
+            line-height: 1;
+            font-size: var(--font-suit-landscape);
+        }
+
+        /* DEFAULT RANK (Hidden in landscape/desktop) */
+        .card-rank-portrait {
+            display: none; 
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+        
+        .landscape-el { display: block; }
+
+        /* --- STOCK & WASTE --- */
+        #stock-waste-group { display: flex; gap: 20px; align-items: center; }
+        #stock {
+            width: var(--card-w); height: var(--card-h);
+            background: #0d47a1; border-radius: var(--card-radius);
+            border: 1px solid white; display: flex; justify-content: center;
+            align-items: center; cursor: pointer; position: relative;
+        }
+        #stock-count {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            background: #ffca28; color: #333; border-radius: 50%; width: 20px; height: 20px; 
+            font-size: 10px; display: flex; justify-content: center; align-items: center;
+            font-weight: bold; border: 1px solid white; pointer-events: none; 
+        }
+        #waste { width: var(--card-w); height: var(--card-h); position: relative; }
+
+        /* --- BOTTOM BAR --- */
+        #bottom-area {
+            flex: 0 0 calc(var(--card-h) + 40px); background: rgba(0,0,0,0.4);
+            padding: 10px 0; z-index: 100; display: flex; justify-content: center;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        #bottom-content { 
+            width: 100%; max-width: var(--board-max-w); display: grid;
+            grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 15px; box-sizing: border-box; 
+        }
+        .bottom-action-btn {
+            background: #2196f3; width: 48px; height: 48px; border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center; font-size: 9px; color: white;
+            flex-direction: column; cursor: pointer; position: relative;
+        }
+        #status-button-container { justify-self: center; grid-column: 2; }
+        .new-game-bottom {
+            background: #ffca28; color: #333; padding: 10px 18px; border-radius: 20px;
+            font-weight: bold; font-size: 0.8rem; border: none; cursor: pointer; display: none; white-space: nowrap;
+        }
+        .hint-badge {
+            position: absolute; background: #f44336; color: white; border-radius: 50%;
+            width: 18px; height: 18px; font-size: 11px; display: flex; justify-content: center; 
+            align-items: center; font-weight: bold; border: 1px solid white; z-index: 10; pointer-events: none; 
+        }
+        
+        #msg-box {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(30, 30, 30, 0.98); color: white; padding: 25px; border-radius: 12px; 
+            text-align: center; display: none; z-index: 3000; width: 85%; max-width: 320px; border: 2px solid #ffca28;
+        }
+        .hint-card { outline: 3px solid #ffca28; z-index: 500 !important; transform: scale(1.05); }
+
+        /* Stats Table Styles */
+        .stats-table { width: 100%; text-align: left; margin-bottom: 15px; border-collapse: collapse; }
+        .stats-table td { padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .stats-table td:last-child { text-align: right; font-weight: bold; color: #ffca28; }
+        .high-score-list { list-style: none; padding: 0; margin: 0; text-align: left; }
+        .high-score-list li { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .high-score-list li span:last-child { color: #ffca28; font-weight: bold; }
+
+        /* ========================================= */
+        /* PORTRAIT MODE (Mobile)                    */
+        /* ========================================= */
+        @media (max-width: 600px) and (orientation: portrait) {
+            #tableau-container { margin-top: 100px; }
+            #stock-waste-group {
+                position: absolute;
+                top: calc(100px + (3 * var(--card-h) * var(--row-offset)) + var(--card-h) + 30px);
+                left: 50%; transform: translateX(-50%); gap: 20px; z-index: 10;
+            }
+            .hint-badge { top: -2px; right: -2px; }
+            
+            .landscape-el { display: none; }
+            .card-rank-portrait {
+                display: block; font-size: 5vw; margin-top: -1px; 
+            }
+            .card-suit {
+                font-size: 4.4vw !important; margin-top: 4px;
+            }
+            .card { justify-content: center; gap: 0; }
+        }
+
+        /* ========================================= */
+        /* LANDSCAPE MODE                            */
+        /* ========================================= */
+        @media (orientation: landscape) {
+            :root {
+                --card-w: 15vh; --card-h: 18vh; 
+                --font-corner: 3.5vh; 
+                --font-suit-landscape: 5vh;
+            }
+            #top-bar-content { grid-template-columns: 1fr auto auto auto 1fr; gap: 20px; }
+            .top-btn { display: flex; } .top-hint-wrapper { display: block; }
+            .bottom-action-btn { display: none !important; }
+            #game-board { align-items: center; max-width: 1000px; margin: 0 auto; }
+            #tableau-container { flex: 1; height: 80vh; margin-top: 20px; }
+            #stock-waste-group { position: static; margin-left: 20px; margin-right: 40px; flex-direction: row; gap: 15px; }
+            #bottom-area { position: absolute; bottom: 20px; width: 100%; background: none; pointer-events: none; flex: 0; padding: 0; }
+            #status-button-container { pointer-events: auto; }
+
+            .landscape-el { display: block; }
+            .card-rank-portrait { display: none; }
+            .card { justify-content: center; gap: 0; }
+        }
+
+        @media (min-width: 1000px) {
+            :root { --card-w: 110px; --card-h: 140px; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="top-bar">
+    <div id="top-bar-content">
+        <div id="score">Score: 0</div>
+        <div class="top-hint-wrapper">
+            <button class="top-btn" onclick="getHint()"><span>?</span><div>Hint</div></button>
+            <div id="hint-count-top" class="hint-badge" style="display:none; top: 4px; left: 50%; transform: translateX(-50%);">0</div>
+        </div>
+        <div id="game-title" onclick="showMenu()">TRIPEAKS</div>
+        <button class="top-btn" onclick="undo()"><span>↩</span><div>Undo</div></button>
+        <div id="timer">00:00</div>
+    </div>
+</div>
+
+<div id="game-board">
+    <div id="tableau-container"></div>
+    <div id="stock-waste-group">
+        <div id="stock" onclick="drawStock()"><div id="stock-count"></div></div>
+        <div id="waste"></div>
+    </div>
+</div>
+
+<div id="bottom-area">
+    <div id="bottom-content">
+        <div class="bottom-action-btn" onclick="getHint()" style="background: #26a69a; justify-self: start;">
+            <div id="hint-count-bottom" class="hint-badge">0</div><span style="font-size:16px;">?</span>Hint
+        </div>
+        <div id="status-button-container">
+            <button id="bottom-new-game" class="new-game-bottom" onclick="newGame()">NEW GAME</button>
+        </div>
+        <div class="bottom-action-btn" onclick="undo()" style="background: #ef5350; justify-self: end;">
+            <span style="font-size:16px;">↩</span>Undo
+        </div>
+    </div>
+</div>
+
+<div id="msg-box">
+    <h2 id="msg-title" style="margin-top:0; color: #ffca28;"></h2>
+    <div id="msg-body" style="text-align:left; font-size:0.85rem; line-height:1.4; margin-bottom:20px;"></div>
+    <div id="msg-btns"></div>
+</div>
+
+<script>
+    const SUITS = ['♠', '♥', '♣', '♦'];
+    const LABELS = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+    
+    const U = 9.8; const MGN = 2.0; const POSITIONS = [];
+    POSITIONS[0] = { r:0, l: MGN + (U * 1.5) }; POSITIONS[1] = { r:0, l: MGN + (U * 4.5) }; POSITIONS[2] = { r:0, l: MGN + (U * 7.5) }; 
+    for(let i=0; i<6; i++) POSITIONS[3+i] = { r:1, l: MGN + (U * (i < 2 ? 1+i : (i < 4 ? 2+i : 3+i))) };
+    for(let i=0; i<9; i++) POSITIONS[9+i] = { r:2, l: MGN + (U * 0.5) + (i * U) };
+    for(let i=0; i<10; i++) POSITIONS[18+i] = { r:3, l: MGN + (i * U) };
+
+    const COVER_MAP = {
+        0: [3, 4], 1: [5, 6], 2: [7, 8], 3: [9, 10], 4: [10, 11], 5: [12, 13], 6: [13, 14], 7: [15, 16], 8: [16, 17],
+        9: [18, 19], 10: [19, 20], 11: [20, 21], 12: [21, 22], 13: [22, 23], 14: [23, 24], 15: [24, 25], 16: [25, 26], 17: [26, 27]
+    };
+
+    // STATS & TIMER LOGIC
+    let appStats = JSON.parse(localStorage.getItem('tripeaks_stats_v2')) || {
+        gamesPlayed: 0,
+        wins: 0,
+        maxStreak: 0,
+        bestTime: null, // Stored in seconds
+        highScores: []
+    };
+
+    function saveStats() {
+        localStorage.setItem('tripeaks_stats_v2', JSON.stringify(appStats));
+    }
+
+    let gameState = { 
+        tableau: [], stock: [], waste: [], score: 0, streak: 0, 
+        validHints: [], hintIndex: 0, finished: false,
+        timeElapsed: 0, timerActive: false
+    };
+    let historyStack = [];
+    let timerInterval = null;
+
+    function newGame() {
+        // Stop any running timer
+        stopTimer();
+        
+        // Record previous game stats if it was active and not already finished
+        if (!gameState.finished && historyStack.length > 0) {
+            finishGame(false);
+        }
+
+        gameState.score = 0; 
+        gameState.streak = 0; 
+        gameState.finished = false;
+        gameState.timeElapsed = 0;
+        gameState.timerActive = false;
+        
+        updateTimerUI();
+        historyStack = [];
+        
+        let deck = []; for(let s=0; s<4; s++) for(let r=0; r<13; r++) deck.push({ rank: r, suit: s });
+        deck.sort(() => Math.random() - 0.5);
+        gameState.tableau = deck.splice(0, 28); gameState.waste = [deck.pop()]; gameState.stock = deck;
+        updateGameState(); render(); updateScoreUI(); closeMsg();
+    }
+
+    // --- TIMER FUNCTIONS ---
+    function startTimer() {
+        if (gameState.timerActive) return;
+        gameState.timerActive = true;
+        timerInterval = setInterval(() => {
+            gameState.timeElapsed++;
+            updateTimerUI();
+        }, 1000);
+    }
+
+    function stopTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = null;
+        gameState.timerActive = false;
+    }
+
+    function updateTimerUI() {
+        let m = Math.floor(gameState.timeElapsed / 60).toString().padStart(2, '0');
+        let s = (gameState.timeElapsed % 60).toString().padStart(2, '0');
+        document.getElementById('timer').innerText = `${m}:${s}`;
+    }
+
+    function formatTime(seconds) {
+        if (seconds === null) return "--:--";
+        let m = Math.floor(seconds / 60).toString().padStart(2, '0');
+        let s = (seconds % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
+    }
+
+    // --- STATS HELPER ---
+    function finishGame(isWin) {
+        if(gameState.finished) return;
+        gameState.finished = true;
+        stopTimer();
+
+        appStats.gamesPlayed++;
+        if (isWin) {
+            appStats.wins++;
+            // Update Best Time
+            if (appStats.bestTime === null || gameState.timeElapsed < appStats.bestTime) {
+                appStats.bestTime = gameState.timeElapsed;
+            }
+        }
+        
+        // Update High Scores
+        appStats.highScores.push(gameState.score);
+        appStats.highScores.sort((a, b) => b - a);
+        appStats.highScores = appStats.highScores.slice(0, 5);
+        
+        saveStats();
+    }
+
+    function saveState() { historyStack.push(JSON.parse(JSON.stringify(gameState))); if(historyStack.length > 40) historyStack.shift(); }
+    
+    function undo() { 
+        if(historyStack.length === 0) return; 
+        let restoredState = historyStack.pop();
+        
+        // Restore State vars
+        gameState.score = Math.max(0, restoredState.score - 50);
+        gameState.streak = 0;
+        gameState.tableau = restoredState.tableau;
+        gameState.stock = restoredState.stock;
+        gameState.waste = restoredState.waste;
+        // NOTE: We do NOT reset the timer on Undo. Time keeps ticking.
+        
+        updateGameState(); render(); updateScoreUI(); 
+    }
+
+    function updateGameState() {
+        gameState.tableau.forEach((card, idx) => {
+            if(!card) return; 
+            let coveredBy = COVER_MAP[idx];
+            card.faceUp = !coveredBy || coveredBy.every(cIdx => gameState.tableau[cIdx] === null);
+        });
+        calcHints(); updateEndGameButton();
+    }
+
+    function calcHints() {
+        gameState.validHints = []; let topWaste = gameState.waste[gameState.waste.length-1];
+        gameState.tableau.forEach((card, idx) => { if(card && card.faceUp && isMatch(card, topWaste)) gameState.validHints.push(idx); });
+        const count = gameState.validHints.length; const display = count === 0 ? 'none' : 'flex';
+        const bBottom = document.getElementById('hint-count-bottom'); if(bBottom) { bBottom.textContent = count; bBottom.style.display = display; }
+        const bTop = document.getElementById('hint-count-top'); if(bTop) { bTop.textContent = count; bTop.style.display = display; }
+    }
+
+    function updateEndGameButton() {
+        const btn = document.getElementById('bottom-new-game');
+        const isWon = gameState.tableau.every(c => c === null);
+        const isStuck = gameState.stock.length === 0 && gameState.validHints.length === 0;
+        btn.style.display = (isStuck && !isWon) ? 'block' : 'none';
+    }
+
+    function getHint() {
+        if(gameState.validHints.length === 0) return;
+        let tIdx = gameState.validHints[gameState.hintIndex]; let el = document.getElementById(`tab-${tIdx}`);
+        if(el) { el.classList.add('hint-card'); setTimeout(() => el.classList.remove('hint-card'), 1200); }
+        gameState.hintIndex = (gameState.hintIndex + 1) % gameState.validHints.length;
+    }
+
+    function isMatch(c1, c2) { let diff = Math.abs(c1.rank - c2.rank); return diff === 1 || diff === 12; }
+
+    function handleCardClick(idx) {
+        if (!gameState.timerActive) startTimer(); // Start timer on first move
+
+        let card = gameState.tableau[idx]; if(!card || !card.faceUp) return;
+        if(isMatch(card, gameState.waste[gameState.waste.length-1])) {
+            saveState(); 
+            gameState.tableau[idx] = null; gameState.waste.push(card);
+            gameState.streak++; 
+            gameState.score += (50 + (gameState.streak * 50)); 
+
+            if (gameState.streak > appStats.maxStreak) {
+                appStats.maxStreak = gameState.streak;
+                saveStats();
+            }
+
+            updateGameState(); render(); updateScoreUI(); checkWin();
+        }
+    }
+
+    function drawStock() {
+        if (!gameState.timerActive) startTimer(); // Start timer on stock draw
+        if(gameState.stock.length === 0) return;
+        saveState(); gameState.waste.push(gameState.stock.pop()); gameState.streak = 0; 
+        updateGameState(); render(); updateScoreUI();
+    }
+
+    function checkWin() {
+        if(gameState.tableau.every(c => c === null)) {
+            // Base completion bonus
+            gameState.score += gameState.stock.length * 1000;
+            
+            // TIME BONUS: +50pts per second remaining if under 60s
+            if (gameState.timeElapsed < 60) {
+                let timeBonus = (60 - gameState.timeElapsed) * 50;
+                gameState.score += timeBonus;
+            }
+
+            updateScoreUI();
+            finishGame(true); // Stop timer and save stats
+            
+            let timeMsg = gameState.timeElapsed < 60 ? `<br><span style="color:#4caf50; font-size:0.9rem;">Speed Bonus Applied!</span>` : '';
+            
+            showResult("Winner!", `Final Score: ${gameState.score}<br>Time: ${formatTime(gameState.timeElapsed)}${timeMsg}`); 
+            updateEndGameButton();
+        }
+    }
+
+    // HTML GENERATION
+    function createCardHTML(card) {
+        const rank = LABELS[card.rank];
+        const suit = SUITS[card.suit];
+        return `
+            <div class="card-rank-portrait portrait-el">${rank}</div>
+            <div class="card-suit">${suit}</div>
+            <div class="corner top-left landscape-el"><span>${rank}</span></div>
+            <div class="corner bottom-right landscape-el"><span>${rank}</span></div>
+        `;
+    }
+
+    function render() {
+        const container = document.getElementById('tableau-container'); container.innerHTML = ''; 
+        gameState.tableau.forEach((card, idx) => {
+            if(!card) return; 
+            let pos = POSITIONS[idx]; let el = document.createElement('div'); el.id = `tab-${idx}`;
+            el.className = `card ${card.faceUp ? '' : 'back locked'}`;
+            el.style.top = `calc(${pos.r} * var(--card-h) * var(--row-offset))`; el.style.left = `${pos.l}%`; 
+            if(card.faceUp) {
+                el.classList.add( (card.suit === 1 || card.suit === 3) ? 'red' : 'black');
+                el.innerHTML = createCardHTML(card); el.onclick = () => handleCardClick(idx);
+            }
+            container.appendChild(el);
+        });
+        const wasteEl = document.getElementById('waste'); let top = gameState.waste[gameState.waste.length-1];
+        wasteEl.innerHTML = ''; let wCard = document.createElement('div');
+        wCard.className = `card ${ (top.suit === 1 || top.suit === 3) ? 'red' : 'black'}`;
+        wCard.style.position = "relative"; wCard.innerHTML = createCardHTML(top); wasteEl.appendChild(wCard);
+        document.getElementById('stock-count').textContent = gameState.stock.length;
+        document.getElementById('stock').style.opacity = gameState.stock.length === 0 ? "0.3" : "1";
+    }
+
+    function updateScoreUI() { document.getElementById('score').innerText = "Score: " + gameState.score; }
+    
+    function showMenu() {
+        document.getElementById('msg-title').innerText = "TRIPEAKS";
+        document.getElementById('msg-body').innerHTML = `
+            <div style="text-align:center; font-weight:bold; margin-bottom:12px;">Version 1.28</div>
+            <strong>How to Play:</strong><br>Tap cards one rank higher or lower than the waste card. Aces play on Kings or 2s.<br><br>
+            <strong>Scoring:</strong><br>
+            • Streak bonus: +50 pts per card<br>
+            • Time bonus: +50 pts/sec (under 1 min)<br>
+            • Completion: 1,000 pts per stock card
+        `;
+        const btns = document.getElementById('msg-btns');
+        btns.innerHTML = `
+            <button style="padding:10px 20px; border-radius:20px; border:none; font-weight:bold; cursor:pointer; background:#ffca28; color:#333;" onclick="newGame()">NEW GAME</button>
+            <button style="padding:10px 20px; border-radius:20px; border:none; font-weight:bold; cursor:pointer; background:#2196f3; color:white; margin-left:10px;" onclick="showStats()">STATS</button>
+            <button style="padding:10px 20px; border-radius:20px; border:none; font-weight:bold; cursor:pointer; background:#555; color:white; margin-left:10px;" onclick="closeMsg()">CLOSE</button>
+        `;
+        document.getElementById('msg-box').style.display = 'block';
+    }
+
+    function showStats() {
+        let winPct = appStats.gamesPlayed > 0 ? Math.round((appStats.wins / appStats.gamesPlayed) * 100) : 0;
+        let highScoresHTML = appStats.highScores.length > 0 
+            ? appStats.highScores.map((s, i) => `<li><span>#${i+1}</span><span>${s.toLocaleString()}</span></li>`).join('')
+            : '<li style="color:#aaa; justify-content:center;">No games played yet</li>';
+
+        document.getElementById('msg-title').innerText = "STATISTICS";
+        document.getElementById('msg-body').innerHTML = `
+            <table class="stats-table">
+                <tr><td>Games Played</td><td>${appStats.gamesPlayed}</td></tr>
+                <tr><td>Win Percentage</td><td>${winPct}%</td></tr>
+                <tr><td>Longest Streak</td><td>${appStats.maxStreak}</td></tr>
+                <tr><td>Best Time</td><td>${formatTime(appStats.bestTime)}</td></tr>
+            </table>
+            <div style="font-weight:bold; margin-bottom:5px; border-bottom:1px solid #ffca28; display:inline-block; padding-bottom:2px;">HIGH SCORES</div>
+            <ul class="high-score-list">
+                ${highScoresHTML}
+            </ul>
+        `;
+        const btns = document.getElementById('msg-btns');
+        btns.innerHTML = `<button style="padding:10px 20px; border-radius:20px; border:none; font-weight:bold; cursor:pointer; background:#555; color:white;" onclick="closeMsg()">CLOSE</button>`;
+    }
+
+    function showResult(title, text) {
+        document.getElementById('msg-title').innerText = title;
+        document.getElementById('msg-body').innerHTML = `<div style="text-align:center; font-size:1.2rem;">${text}</div>`;
+        const btns = document.getElementById('msg-btns');
+        btns.innerHTML = `<button style="padding:10px 20px; border-radius:20px; border:none; font-weight:bold; cursor:pointer; background:#ffca28; color:#333;" onclick="newGame()">PLAY AGAIN</button>`;
+        document.getElementById('msg-box').style.display = 'block';
+    }
+    function closeMsg() { document.getElementById('msg-box').style.display = 'none'; }
+    window.addEventListener('resize', render); newGame();
+</script>
+</body>
+</html>
