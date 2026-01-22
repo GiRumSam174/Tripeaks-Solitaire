@@ -18,7 +18,7 @@
             --row-offset: 0.65; 
             --board-max-w: 1000px;
             
-            /* PORTRAIT BASE SIZES */
+            /* PORTRAIT BASE SIZES (Ratio ~1.43) */
             --card-w: calc(10vw - 2px); 
             --card-h: 14.28vw; 
             
@@ -193,16 +193,25 @@
         /* ========================================= */
         @media (orientation: landscape) {
             :root {
-                --card-w: 15vh; --card-h: 18vh; 
+                /* NEW RATIO (approx 1.43) to match portrait */
+                --card-w: 13.5vh; 
+                --card-h: 19.3vh; 
+                
                 --font-corner: 3.5vh; 
                 --font-suit-landscape: 5vh;
             }
             #top-bar-content { grid-template-columns: 1fr auto auto auto 1fr; gap: 20px; }
             .top-btn { display: flex; } .top-hint-wrapper { display: block; }
             .bottom-action-btn { display: none !important; }
+            
+            /* Center board */
             #game-board { align-items: center; max-width: 1000px; margin: 0 auto; }
+            
             #tableau-container { flex: 1; height: 80vh; margin-top: 20px; }
-            #stock-waste-group { position: static; margin-left: 20px; margin-right: 40px; flex-direction: row; gap: 15px; }
+            
+            /* Increased margin-left to push deck right */
+            #stock-waste-group { position: static; margin-left: 50px; margin-right: 20px; flex-direction: row; gap: 15px; }
+            
             #bottom-area { position: absolute; bottom: 20px; width: 100%; background: none; pointer-events: none; flex: 0; padding: 0; }
             #status-button-container { pointer-events: auto; }
 
@@ -214,8 +223,21 @@
             #msg-box { padding: 12px; width: 70%; max-width: 450px; }
         }
 
+        /* ========================================= */
+        /* LARGE SCREENS / iPAD LANDSCAPE            */
+        /* ========================================= */
         @media (min-width: 1000px) {
-            :root { --card-w: 110px; --card-h: 140px; }
+            :root { 
+                /* Fixed sizes with better Aspect Ratio for iPad */
+                --card-w: 110px; 
+                --card-h: 157px; 
+            }
+            
+            /* Widen the board so cards don't overlap sideways as much */
+            #game-board { max-width: 1200px; }
+            
+            /* Push the deck further right on large screens */
+            #stock-waste-group { margin-left: 70px; }
         }
     </style>
 </head>
