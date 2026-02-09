@@ -1,8 +1,6 @@
-An easy to play, offline version of tripeaks solitaire that plays well on your smartphone in portrait and landscape mode. It's my favorite pastime solitaire. Stats can be viewed and are saved locally.
+An easy to play, adfree version of tripeaks solitaire that plays well on your smartphone in portrait and landscape mode. It's my favorite pastime solitaire. Stats can be viewed and are saved locally.
 
-There are no adds and no special permission requirements! 
-
-To install on your device, go to https://girumsam174.github.io/Tripeaks-Solitaire/ then go to your browser's menu and click add to homescreen.
+To play offline and install on your device, go to https://girumsam174.github.io/Tripeaks-Solitaire/ then go to your browser's menu and click add to homescreen.
 
 My testing environment is an older Samsung smartphone, so your mileage may vary, but it should work on iOS as well.
 
